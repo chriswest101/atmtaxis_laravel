@@ -19,15 +19,18 @@ Route::get('/', function () {
 })->name("index");
 
 Route::group([
-    'prefix' => 'account'
+    'prefix' => 'myaccount'
 ], function () {
-    Route::get('signup', 'AccountsController@signup')->name('signup');
-    Route::get('login', 'AccountsController@login')->name('login');
-
     Route::group([
-        'middleware' => 'auth:api'
+        'middleware' => 'auth:web'
     ], function() {
-        Route::get('', 'AccountsController@account')->name('account');
+        Route::get('', 'AccountsController@index')->name('myAccount.index');
+        Route::get('/details', 'AccountsController@details')->name('myAccount.details');
+        Route::get('/password', 'AccountsController@password')->name('myAccount.password');
+        Route::get('/bookings', 'AccountsController@bookings')->name('myAccount.bookings');
+        Route::get('/quotes', 'AccountsController@quotes')->name('myAccount.quotes');
+        Route::post('/details', 'AccountsController@updateDetails')->name('myAccount.updateDetails');
+        Route::post('/password', 'AccountsController@updatePassword')->name('myAccount.updatePassword');
     });
 });
 

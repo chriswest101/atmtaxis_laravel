@@ -17,12 +17,14 @@
                 <h2 class="icon fa-check"> Thank you for your booking request <span class="font-weight-bold">{{ $name }}</span>!</h2>
                 <p>We will get back to you on the number or email you provided soon.</p>
 
-                @guest
+                @guest 
+				<div style="padding-bottom: 2em;">
                     <p>Create an account with us today to collect miles with us, get discounts and much more!</p>
-                    <a class="button special" href="{{ route('signup') }}">Create Account</a>
+					<a class="button special" href="{{ route('signup') }}">Create Account</a>
+				</div>
                 @endguest
 
-                <a class="button special icon fa-arrow-right" href="index.php">Return to our homepage</a>
+                <a class="button special" href="index.php">Return to our homepage</a>
             </div>
         </footer>
     </div>
