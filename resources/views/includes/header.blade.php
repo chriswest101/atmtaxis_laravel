@@ -4,8 +4,8 @@
             <a href="{{ route('index') }}" class="logo"><strong>ATM Taxis</strong></a>
             <nav id="nav">
                 <a href="{{ route('index') }}">Home</a>
-                <a href="{{ route('bookingsGet') }}">Book</a>
-                <a href="{{ route('quoteGet') }}" class="getQuote">Free Quote</a>
+                <a href="{{ route('booking') }}">Book</a>
+                <a href="{{ route('quote') }}" class="getQuote">Free Quote</a>
                 <a href="farecalculator.php">Fare Calculator</a>
                 <a href="services.php">Services</a>
                 <a href="about.php">About</a>

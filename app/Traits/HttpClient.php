@@ -19,10 +19,13 @@ trait HttpClient
         ];
     }
 
-    public function get(string $url, string $apiKey, string $path)
+    public function get(string $url, string $path, array $headers)
     {
-        $client = new Client();
-        $response = $client->get($url.$path.'&key='.$apiKey);
+        $client = new Client([
+            'headers' => $headers,
+            'http_errors' => false
+        ]);
+        $response = $client->get($url.$path);
         return [
             "status_code" => (int)$response->getStatusCode(),
             "body" => $response->getBody()

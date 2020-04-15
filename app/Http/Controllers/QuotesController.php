@@ -2,69 +2,46 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StageFiveQuote;
+use App\Http\Requests\StageFourQuote;
+use App\Http\Requests\StageThreeQuote;
+use App\Http\Requests\StageTwoQuote;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use App\Traits\ManageSession;
-use App\Traits\BookingHandler;
+use App\Traits\QuotesHandler;
 use App\Traits\GoogleApi;
 use App\Traits\HttpClient;
+use Illuminate\Support\Facades\Auth;
 
 class QuotesController extends Controller
 {
-    use HttpClient;
-    use GoogleApi;
-    use ManageSession;
-    use BookingHandler;
+    use HttpClient, GoogleApi, ManageSession, QuotesHandler;
 
-    /**
-     * Handle Quote GET Journey.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function handleGet(Request $request)
+    public function showFrom(Request $request)
     {
-        $this->ClearSession($request, 'quote');
+        $this->clearSession($request, 'quote');
         return view('quote/stageone')->with("page", "subpage");
     }
 
-    /**
-     * Handle Quote POST Journey.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function handlePost(Request $request)
+    public function validateFrom(StageTwoQuote $request)
     {
-        $stage = $request->get('nextstage');
-
-        if (empty($stage)) {
-            return redirect()->route('quoteGet');
-        }
-
-        switch ($stage) {
-            case "stagetwo":
-                return $this->stageTwo($request, $stage);
-            case "stagethree":
-                return $this->stageThree($request, $stage);
-            case "stagefour":
-                return $this->stageFour($request, $stage);
-            case "stagefive":
-                return $this->stageFive($request, $stage);
-            default:
-                return redirect()->route('quoteGet');
-        }
+        $this->storeSession($request, 'quote', $request->validated());
+        return redirect()->route('quote.showTo');
     }
 
-    private function stageTwo(Request $request, string $stage)
+    public function showTo(Request $request)
     {
-        $validatedData = $this->validateStageTwo($request);
-        $this->StoreSession($request, 'quote', $validatedData);
-        return view('quote/' . $stage)->with("page", "subpage");
+        if (!$this->isValidQuoteStage($request, 'nextstage', 'stagetwo')) {
+            return redirect()->route('quote.showFrom');
+        }
+
+        return view('quote/stagetwo')->with("page", "subpage");
     }
 
-    private function stageThree(Request $request, string $stage)
+    public function validateTo(StageThreeQuote $request)
     {
-        $validatedData = $this->validateStageThree($request);
-        $this->StoreSession($request, 'quote', $validatedData);
+        $this->storeSession($request, 'quote', $request->validated());
         $quote = $request->session()->get('quote');
         $find = array('(', ')', ' ', '');
         $fromLatLong = str_replace($find, "", $quote['from_latlong'][0]);
@@ -74,26 +51,52 @@ class QuotesController extends Controller
             return Redirect::back()->withErrors(['Something went wrong. Please try again. If the problem persists please contact us.']);
         }
 
-        $this->StoreSession($request, 'quote', ['distance' => $distance]);
-        return view('quote/' . $stage)->with("page", "subpage");
+        $this->storeSession($request, 'quote', ['distance' => $distance]);
+        return redirect()->route('quote.showDetails');
     }
 
-    private function stageFour(Request $request, string $stage)
+    public function showDetails(Request $request)
     {
-        $validatedData = $this->validateStageFour($request);
-        $this->StoreSession($request, 'quote', $validatedData);
-        return view('quote/' . $stage)->with(array("page" => "subpage", "quote" => $request->session()->get('quote')));
+        if (!$this->isValidQuoteStage($request, 'nextstage', 'stagethree')) {
+            return redirect()->route('quote.showFrom');
+        }
+
+        return view('quote/stagethree')->with(["page" => "subpage"]);
     }
 
-    private function stageFive(Request $request, string $stage)
+    public function validateDetails(StageFourQuote $request)
     {
-        $this->validateStageFive($request);
+        $this->storeSession($request, 'quote', $request->validated());
+        return redirect()->route('quote.showConfirm');
+    }
+
+    public function showConfirm(Request $request)
+    {
+        if (!$this->isValidQuoteStage($request, 'nextstage', 'stagefour')) {
+            return redirect()->route('quote.showFrom');
+        }
+
+        return view('quote/stagefour')->with(array("page" => "subpage", "quote" => $request->session()->get('quote')));
+    }
+
+    public function validateConfirm(StageFiveQuote $request)
+    {      
+        $this->storeSession($request, 'quote', $request->validated());
         $quote = $request->session()->get('quote');
-        $quoteMade = $this->makeBooking($quote, '/quotes');
+        $quoteMade = $this->makeQuote($quote);
         if (!$quoteMade) {
             return Redirect::back()->withErrors(['Something went wrong. Please try again. If the problem persists please contact us.']);
         }
+        return redirect()->route('quote.showComplete');
+    }
 
-        return view('quote/' . $stage)->with(array("page" => "subpage", "name" => $quote['name'][0]));
+    public function showComplete(Request $request)
+    {
+        if (!$this->isValidQuoteStage($request, 'nextstage', 'stagefive')) {
+            return redirect()->route('quote.showFrom');
+        }
+        
+        $quote = $request->session()->get('quote');
+        return view('quote/stagefive')->with(array("page" => "subpage", "name" => Auth::user() ? Auth::user()->name : $quote['name'][0]));
     }
 }

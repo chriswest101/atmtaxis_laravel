@@ -25,7 +25,7 @@
         </header>
         <footer>
             <div class="align-right">
-                <form method="post" onsubmit="return validate(this);" action="{{ route('bookingsPost') }}">
+                <form method="post" onsubmit="return validate(this);" action="{{ route('booking.validateDetails') }}">
                     @csrf
                     <div class="row uniform">
                         <div class="12u$">
@@ -53,17 +53,17 @@
 
                         <div class="12u$">
                             <label class="text-left">Your Name:</label>
-                            <input type="text" name="name" value="" id="name" required placeholder="Your name..." />
+                            <input type="text" name="name" value="@if(Auth::user()){{Auth::user()->name}}@endif" id="name" required placeholder="Your name..." />
                         </div>
 
                         <div class="12u$">
                             <label class="text-left">Contact Number:</label>
-                            <input type="tel" name="phone" value="" id="phone" required placeholder="Contact Number..." />
+                            <input type="tel" name="phone" value="@if(Auth::user()){{Auth::user()->phone}}@endif" id="phone" required placeholder="Contact Number..." />
                         </div>
 
                         <div class="12u$">
                             <label class="text-left">Email Address:</label>
-                            <input type="email" name="email" value="" id="email" required placeholder="Email Address..." />
+                            <input type="email" name="email" value="@if(Auth::user()){{Auth::user()->email}}@endif" id="email" required placeholder="Email Address..." />
                         </div>
 
                         <div class="12u$">

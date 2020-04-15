@@ -17,7 +17,7 @@
                 <h2 class="icon fa-check"> Thank you for your quote request <span class="font-weight-bold">{{ $name }}</span>!</h2>
                 <p>We will get back to you on the email you provided soon.</p>
 
-                <a class="button special icon fa-arrow-right" href="index.php">Return to our homepage</a>
+                <a class="button special icon fa-arrow-right" href="{{ route('index') }}">Return to our homepage</a>
             </div>
         </footer>
     </div>

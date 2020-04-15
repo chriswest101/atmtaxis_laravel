@@ -2,15 +2,14 @@
 
 namespace App\Traits;
 
-use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-trait BookingHandler
+trait QuotesHandler
 {
     use HttpClient;
 
-    public function makeBooking(array $booking)
+    public function makeQuote(array $booking)
     {
         $url = config('api.url');
         $headers = [
@@ -24,13 +23,12 @@ trait BookingHandler
             'date' => $booking['date'][0],
             'time' => $booking['time'][0],
             'name' => $booking['name'][0],
-            'phone' => $booking['phone'][0],
             'email' => $booking['email'][0],
             'no_of_people' => $booking['no_of_people'][0],
             'distance' => $booking['distance'][0]
         ];
 
-        $response = $this->post($url, '/bookings', $payload, $headers);
+        $response = $this->post($url, '/quotes', $payload, $headers);
         if ($response['status_code'] < 200 || $response['status_code'] >= 300) {
             return false;
         }
@@ -38,7 +36,7 @@ trait BookingHandler
         return true;
     }
 
-    public function getBookings(string $token)
+    public function getQuotes(string $token)
     {
         $url = config('api.url');
         $headers = [
@@ -46,12 +44,12 @@ trait BookingHandler
             'Accept'        => 'application/json',
         ];
         
-        $response = $this->get($url, '/bookings', $headers);
-        $bookings = json_decode($response["body"], true);
+        $response = $this->get($url, '/quotes', $headers);
+        $quotes = json_decode($response["body"], true);
         if ($response['status_code'] < 200 || $response['status_code'] >= 300) {
             return false;
         }
         
-        return $bookings;
+        return $quotes;
     }
 }

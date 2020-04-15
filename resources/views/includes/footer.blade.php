@@ -111,7 +111,7 @@
                             <meta itemprop="width" content="150">
                             <meta itemprop="height" content="150">
                         </span>
-                        &copy; {date("Y")} <span itemprop="name">{$company}</span>
+                        &copy; {{date("Y")}} <span itemprop="name">ATM Taxis</span>
                         <span itemprop="aggregateRating" itemscope="" itemtype="http://schema.org/AggregateRating">
                             | Rated <span itemprop="ratingValue">5.0</span>
                             / 5.0 based on <span itemprop="reviewCount">11</span> reviews.

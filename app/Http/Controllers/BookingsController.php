@@ -2,69 +2,46 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StageFiveBooking;
+use App\Http\Requests\StageFourBooking;
+use App\Http\Requests\StageThreeBooking;
+use App\Http\Requests\StageTwoBooking;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use App\Traits\ManageSession;
 use App\Traits\BookingHandler;
 use App\Traits\GoogleApi;
 use App\Traits\HttpClient;
+use Illuminate\Support\Facades\Auth;
 
 class BookingsController extends Controller
 {
-    use HttpClient;
-    use GoogleApi;
-    use ManageSession;
-    use BookingHandler;
+    use HttpClient, GoogleApi, ManageSession, BookingHandler;
 
-    /**
-     * Handle Booking GET Journey.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function handleGet(Request $request)
+    public function showFrom(Request $request)
     {
-        $this->ClearSession($request, 'booking');
+        $this->clearSession($request, 'booking');
         return view('book/stageone')->with("page", "subpage");
     }
 
-    /**
-     * Handle Booking POST Journey.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function handlePost(Request $request)
+    public function validateFrom(StageTwoBooking $request)
     {
-        $stage = $request->get('nextstage');
-
-        if (empty($stage)) {
-            return redirect()->route('bookingsGet');
-        }
-
-        switch ($stage) {
-            case "stagetwo":
-                return $this->stageTwo($request, $stage);
-            case "stagethree":
-                return $this->stageThree($request, $stage);
-            case "stagefour":
-                return $this->stageFour($request, $stage);
-            case "stagefive":
-                return $this->stageFive($request, $stage);
-            default:
-                return redirect()->route('bookingsGet');
-        }
+        $this->storeSession($request, 'booking', $request->validated());
+        return redirect()->route('booking.showTo');
     }
 
-    private function stageTwo(Request $request, string $stage)
+    public function showTo(Request $request)
     {
-        $validatedData = $this->validateStageTwo($request);
-        $this->StoreSession($request, 'booking', $validatedData);
-        return view('book/' . $stage)->with("page", "subpage");
+        if (!$this->isValidBookingStage($request, 'nextstage', 'stagetwo')) {
+            return redirect()->route('booking.showFrom');
+        }
+
+        return view('book/stagetwo')->with("page", "subpage");
     }
 
-    private function stageThree(Request $request, string $stage)
+    public function validateTo(StageThreeBooking $request)
     {
-        $validatedData = $this->validateStageThree($request);
-        $this->StoreSession($request, 'booking', $validatedData);
+        $this->storeSession($request, 'booking', $request->validated());
         $booking = $request->session()->get('booking');
         $find = array('(', ')', ' ', '');
         $fromLatLong = str_replace($find, "", $booking['from_latlong'][0]);
@@ -74,26 +51,51 @@ class BookingsController extends Controller
             return Redirect::back()->withErrors(['Something went wrong. Please try again. If the problem persists please contact us.']);
         }
 
-        $this->StoreSession($request, 'booking', ['distance' => $distance]);
-        return view('book/' . $stage)->with("page", "subpage");
+        $this->storeSession($request, 'booking', ['distance' => $distance]);
+        return redirect()->route('booking.showDetails');
     }
 
-    private function stageFour(Request $request, string $stage)
+    public function showDetails(Request $request)
     {
-        $validatedData = $this->validateStageFour($request);
-        $this->StoreSession($request, 'booking', $validatedData);
-        return view('book/' . $stage)->with(array("page" => "subpage", "booking" => $request->session()->get('booking')));
+        if (!$this->isValidBookingStage($request, 'nextstage', 'stagethree')) {
+            return redirect()->route('booking.showFrom');
+        }
+
+        return view('book/stagethree')->with(["page" => "subpage"]);
     }
 
-    private function stageFive(Request $request, string $stage)
+    public function validateDetails(StageFourBooking $request)
     {
-        $this->validateStageFive($request);
+        $this->storeSession($request, 'booking', $request->validated());
+        return redirect()->route('booking.showConfirm');
+    }
+
+    public function showConfirm(Request $request)
+    {
+        if (!$this->isValidBookingStage($request, 'nextstage', 'stagefour')) {
+            return redirect()->route('booking.showFrom');
+        }
+
+        return view('book/stagefour')->with(array("page" => "subpage", "booking" => $request->session()->get('booking')));
+    }
+
+    public function validateConfirm(StageFiveBooking $request)
+    {      
+        $this->storeSession($request, 'booking', $request->validated());
         $booking = $request->session()->get('booking');
-        $bookingMade = $this->makeBooking($booking, '/bookings');
+        $bookingMade = $this->makeBooking($booking);
         if (!$bookingMade) {
             return Redirect::back()->withErrors(['Something went wrong. Please try again. If the problem persists please contact us.']);
         }
+        return redirect()->route('booking.showComplete');
+    }
 
-        return view('book/' . $stage)->with(array("page" => "subpage", "name" => $booking['name'][0]));
+    public function showComplete(Request $request)
+    {
+        if (!$this->isValidBookingStage($request, 'nextstage', 'stagefive')) {
+            return redirect()->route('booking.showFrom');
+        }
+        
+        return view('book/stagefive')->with(array("page" => "subpage", "name" => Auth::user()->name));
     }
 }

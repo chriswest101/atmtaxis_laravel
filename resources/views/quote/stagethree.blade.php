@@ -19,7 +19,7 @@
         </header>
         <footer>
             <div class="align-right">
-                <form method="post" action="{{ route('quotePost') }}">
+                <form method="post" action="{{ route('quote.validateDetails') }}">
                     @csrf
                     <div class="row uniform">
                         <div class="12u$">
@@ -47,12 +47,12 @@
 
                         <div class="12u$">
                             <label class="text-left">Your Name:</label>
-                            <input type="text" name="name" value="" id="name" required placeholder="Your name..." />
+                            <input type="text" name="name" value="@if(Auth::user()){{Auth::user()->name}}@endif" id="name" required placeholder="Your name..." />
                         </div>
 
                         <div class="12u$">
                             <label class="text-left">Email Address:</label>
-                            <input type="email" name="email" value="" id="email" required placeholder="Email Address..." />
+                            <input type="email" name="email" value="@if(Auth::user()){{Auth::user()->email}}@endif" id="email" required placeholder="Email Address..." />
                         </div>
 
                         <div class="12u$">

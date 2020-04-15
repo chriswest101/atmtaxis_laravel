@@ -26,7 +26,7 @@
         <footer>
             <p>When you have selected your pickup location click next below.</p>
             <div class="align-right">
-                <form method="post" action="{{ route('quotePost') }}" >
+                <form method="post" action="{{ route('quote.validateFrom') }}" >
                     @csrf
                     <input type="hidden" name="nextstage" value="stagetwo" required />
                     <input type="hidden" name="from_destination" value="" id="dest" required />

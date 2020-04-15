@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -37,15 +38,35 @@ Route::group([
 Route::group([
     'prefix' => 'booking'
 ], function () {
-    Route::get('', 'BookingsController@handleGet')->name('bookingsGet');
-    Route::post('', 'BookingsController@handlePost')->name('bookingsPost');
+    Route::get('', function () {
+        return redirect()->route('booking.showFrom');
+    })->name("booking");
+    Route::get('/from', 'BookingsController@showFrom')->name('booking.showFrom');
+    Route::post('/from', 'BookingsController@validateFrom')->name('booking.validateFrom');
+    Route::get('/to', 'BookingsController@showTo')->name('booking.showTo');
+    Route::post('/to', 'BookingsController@validateTo')->name('booking.validateTo');
+    Route::get('/details', 'BookingsController@showDetails')->name('booking.showDetails');
+    Route::post('/details', 'BookingsController@validateDetails')->name('booking.validateDetails');
+    Route::get('/confirm', 'BookingsController@showConfirm')->name('booking.showConfirm');
+    Route::post('/confirm', 'BookingsController@validateConfirm')->name('booking.validateConfirm');
+    Route::get('/complete', 'BookingsController@showComplete')->name('booking.showComplete');
 });
 
 Route::group([
     'prefix' => 'quote'
 ], function () {
-    Route::get('', 'QuotesController@handleGet')->name('quoteGet');
-    Route::post('', 'QuotesController@handlePost')->name('quotePost');
+    Route::get('', function () {
+        return redirect()->route('quote.showFrom');
+    })->name("quote");
+    Route::get('/from', 'QuotesController@showFrom')->name('quote.showFrom');
+    Route::post('/from', 'QuotesController@validateFrom')->name('quote.validateFrom');
+    Route::get('/to', 'QuotesController@showTo')->name('quote.showTo');
+    Route::post('/to', 'QuotesController@validateTo')->name('quote.validateTo');
+    Route::get('/details', 'QuotesController@showDetails')->name('quote.showDetails');
+    Route::post('/details', 'QuotesController@validateDetails')->name('quote.validateDetails');
+    Route::get('/confirm', 'QuotesController@showConfirm')->name('quote.showConfirm');
+    Route::post('/confirm', 'QuotesController@validateConfirm')->name('quote.validateConfirm');
+    Route::get('/complete', 'QuotesController@showComplete')->name('quote.showComplete');
 });
 
 Auth::routes();

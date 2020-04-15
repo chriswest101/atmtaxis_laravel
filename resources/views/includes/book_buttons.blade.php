@@ -1,10 +1,10 @@
 <div>
     <div style="margin-top:25px;">
-        <a href="quote.php" class="button special getQuote">Get a Quote</a>
+        <a href="{{ route('quote') }}" class="button special getQuote">Get a Quote</a>
     </div>
     
     <div style="margin-top:25px;">
-        <a href="book.php" class="button special">Book Online</a>
+        <a href="{{ route('booking') }}" class="button special">Book Online</a>
     </div>
     
     <div style="margin-top:25px;">

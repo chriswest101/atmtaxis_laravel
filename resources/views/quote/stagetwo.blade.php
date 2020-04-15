@@ -24,7 +24,7 @@
         <footer>
             <p>When you have selected your drop off location click next below.</p>
             <div class="align-right">
-                <form method="post" action="{{ route('quotePost') }}">
+                <form method="post" action="{{ route('quote.validateTo') }}">
                     @csrf
                     <input type="hidden" name="nextstage" value="stagethree" required />
                     <input type="hidden" name="to_destination" value="" id="dest" required />

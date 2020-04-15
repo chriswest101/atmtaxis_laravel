@@ -24,7 +24,7 @@
 				</div>
                 @endguest
 
-                <a class="button special" href="index.php">Return to our homepage</a>
+                <a class="button special" href="{{ route('index') }}">Return to our homepage</a>
             </div>
         </footer>
     </div>

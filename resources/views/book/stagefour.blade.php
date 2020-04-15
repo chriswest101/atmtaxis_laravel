@@ -16,7 +16,7 @@
         </header>
         <footer>
             <div class="align-right">
-                <form  action="{{ route('bookingsPost') }}" method="post">
+                <form  action="{{ route('booking.validateConfirm') }}" method="post">
                     @csrf
                     <div class="row uniform">
                         <input type="hidden" name="nextstage" value="stagefive" required />
