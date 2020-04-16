@@ -11,15 +11,15 @@
                         <p>Create an account with us today to collect miles with us, get discounts and much more!</p>
                     </header>
 
-                    @if(session()->has('success'))
-                        
-                        @include('includes/success')
+                        @if(session()->has('success'))
+                            
+                            @include('includes/success')
 
-                        <div style="padding-bottom: 2em;">
-                            <a class="button special" href="{{ route('login') }}">Login</a>
-                        </div>
+                            <div style="padding-bottom: 2em;">
+                                <a class="button special" href="{{ route('login') }}">Login</a>
+                            </div>
 
-                    @else
+                        @else
                     
                         @include('includes/errors')
 
