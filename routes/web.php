@@ -21,7 +21,9 @@ Route::get('/', function () {
 
 Route::group([
     'prefix' => 'myaccount'
-], function () {
+], function () {    
+    Route::get('/completesignup', 'AccountsController@completeSignup')->name('myAccount.completeSignup');
+    Route::post('/completesignup', 'AccountsController@validateCompleteSignup')->name('myAccount.validateCompleteSignup');
     Route::group([
         'middleware' => 'auth:web'
     ], function() {

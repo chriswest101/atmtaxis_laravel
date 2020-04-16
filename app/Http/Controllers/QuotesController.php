@@ -12,7 +12,9 @@ use App\Traits\ManageSession;
 use App\Traits\QuotesHandler;
 use App\Traits\GoogleApi;
 use App\Traits\HttpClient;
+use App\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class QuotesController extends Controller
 {
@@ -87,6 +89,7 @@ class QuotesController extends Controller
         if (!$quoteMade) {
             return Redirect::back()->withErrors(['Something went wrong. Please try again. If the problem persists please contact us.']);
         }
+
         return redirect()->route('quote.showComplete');
     }
 
@@ -97,6 +100,15 @@ class QuotesController extends Controller
         }
         
         $quote = $request->session()->get('quote');
-        return view('quote/stagefive')->with(array("page" => "subpage", "name" => Auth::user() ? Auth::user()->name : $quote['name'][0]));
+        $email = Auth::user() ? Auth::user()->email : $quote['email'][0];
+        $id = User::where('email', $email)->first()->id;
+        return view('quote/stagefive')->with(
+            array(
+                    "page" => "subpage", 
+                    "name" => Auth::user() ? Auth::user()->name : $quote['name'][0], 
+                    "email" => Hash::make($email), 
+                    "id" => Hash::make($id)
+                )
+            );
     }
 }

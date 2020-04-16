@@ -19,8 +19,8 @@
 
                 @guest 
 				<div style="padding-bottom: 2em;">
-                    <p>Create an account with us today to collect miles with us, get discounts and much more!</p>
-					<a class="button special" href="{{ route('signup') }}">Create Account</a>
+                    <p>Finish off creating an account with us today to collect miles with us, get discounts and much more!</p>
+					<a class="button special" href="{{ route('myAccount.completeSignup', ['email' => $email, 'id' => $id]) }}">Create Account</a>
 				</div>
                 @endguest
 

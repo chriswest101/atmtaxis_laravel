@@ -17,6 +17,13 @@
                 <h2 class="icon fa-check"> Thank you for your quote request <span class="font-weight-bold">{{ $name }}</span>!</h2>
                 <p>We will get back to you on the email you provided soon.</p>
 
+                @guest 
+				<div style="padding-bottom: 2em;">
+                    <p>Finish off creating an account with us today to collect miles with us, get discounts and much more!</p>
+					<a class="button special" href="{{ route('myAccount.completeSignup', ['email' => $email, 'id' => $id]) }}">Create Account</a>
+				</div>
+                @endguest
+
                 <a class="button special icon fa-arrow-right" href="{{ route('index') }}">Return to our homepage</a>
             </div>
         </footer>

@@ -78,7 +78,7 @@ class AccountsController extends Controller
     {
         $request->validate([
             'password' => 'required',
-            'new_password' => 'required|string|confirmed|min:6|different:password'
+            'new_password' => 'required|string|confirmed|min:8|different:password'
         ]);
 
         if (Hash::check($request->password, Auth::user()->password) == false) {
@@ -91,5 +91,52 @@ class AccountsController extends Controller
         $user->save();
 
         return redirect('/myaccount')->with('success', 'Password successfully updated!');
+    }
+
+    public function completeSignup(Request $request)
+    {
+        $hashedEmail = $request->get('email');
+        $hashedId = $request->get('id');
+        $accounts = User::all();
+        $account = null;
+        foreach ($accounts as $key => $account) {
+            if (Hash::check($account->email, $hashedEmail) && Hash::check($account->id, $hashedId)) {
+                $account = User::where('email', $account->email)->where('id', $account->id)->where('guest_account', true)->first();
+                break;
+            }
+        }     
+        
+        if ($account == null) {
+            return redirect('/register')->withErrors('Something went wrong. Please try again.');
+        }
+        
+        return view('myaccount/completesignup')->with(
+            array(
+                "page" => "subpage", 
+                "account" => $account, 
+                'hashedEmail' => $hashedEmail, 
+                'hashedId' => $hashedId));
+    }
+
+    public function validateCompleteSignup(Request $request)
+    {
+        $hashedEmail = $request->get('hashedemail');
+        $hashedId = $request->get('hashedid');
+        $email = $request->get('unhashedemail');
+        $id = $request->get('unhashedid');
+        $account = User::where('email', $email)->where('id', $id)->where('guest_account', true)->first();
+        
+        if (!Hash::check($account->email, $hashedEmail) || !Hash::check($account->id, $hashedId)) {
+            return Redirect::back()->withErrors(['Something went wrong. Please try again. If the problem persists please contact us.']);
+        }
+
+        $request->validate([
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ]);
+
+        $account->password = Hash::make($request->password);
+        $account->guest_account = false;
+        $account->save();
+        return redirect('/login')->with('success', 'Account successfully Created!');
     }
 }

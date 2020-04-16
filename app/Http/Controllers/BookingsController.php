@@ -12,7 +12,9 @@ use App\Traits\ManageSession;
 use App\Traits\BookingHandler;
 use App\Traits\GoogleApi;
 use App\Traits\HttpClient;
+use App\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class BookingsController extends Controller
 {
@@ -96,6 +98,16 @@ class BookingsController extends Controller
             return redirect()->route('booking.showFrom');
         }
         
-        return view('book/stagefive')->with(array("page" => "subpage", "name" => Auth::user()->name));
+        $quote = $request->session()->get('booking');
+        $email = Auth::user() ? Auth::user()->email : $quote['email'][0];
+        $id = User::where('email', $email)->first()->id;
+        return view('book/stagefive')->with(
+            array(
+                    "page" => "subpage", 
+                    "name" => Auth::user() ? Auth::user()->name : $quote['name'][0], 
+                    "email" => Hash::make($email), 
+                    "id" => Hash::make($id)
+                )
+            );
     }
 }
