@@ -1,0 +1,1 @@
+<h1 class='align-center' style='font-size: 45px;color:#313131;'>Oops and error occured! Please try again.</h1>

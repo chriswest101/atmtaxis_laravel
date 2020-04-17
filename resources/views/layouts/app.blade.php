@@ -93,7 +93,12 @@
     <script src="{{ asset('js/bootstrap-datetimepicker.min.js') }}"></script>
     <script src="{{ asset('js/jquery-eu-cookie-law-popup.js') }}"></script>
     <script src="{{ asset('js/main.js') }}"></script>
-    <script src="{{ asset('js/bookstep1.js') }}"></script>
+    @if (isset($farecalculator))
+    <script src="{{ asset('js/farecalculator.js') }}"></script>
+    @else
+      <script src="{{ asset('js/bookstep1.js') }}"></script>
+    @endif
+    
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAtWjsRz-T8qgXc1b2IOztQsTfAmxtoR38&libraries=places&callback=initAutocomplete" async defer></script>
 
     <!-- <script src="{{ asset('js/farecalculator.js') }}"></script>

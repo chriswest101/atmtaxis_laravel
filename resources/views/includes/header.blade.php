@@ -6,7 +6,7 @@
                 <a href="{{ route('index') }}">Home</a>
                 <a href="{{ route('booking') }}">Book</a>
                 <a href="{{ route('quote') }}" class="getQuote">Free Quote</a>
-                <a href="farecalculator.php">Fare Calculator</a>
+                <a href="{{ route('fareCalculator.index') }}">Fare Calculator</a>
                 <a href="services.php">Services</a>
                 <a href="about.php">About</a>
                 <a href="blog.php">Blog</a>

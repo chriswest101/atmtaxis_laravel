@@ -71,6 +71,9 @@ Route::group([
     Route::get('/complete', 'QuotesController@showComplete')->name('quote.showComplete');
 });
 
+Route::get('/farecalculator', 'FareCalculatorController@index')->name('fareCalculator.index');
+Route::post('/farecalculator', 'FareCalculatorController@calculate')->name('fareCalculator.calculate');
+
 Auth::routes();
 
 //Route::get('/home', 'HomeController@index')->name('account');

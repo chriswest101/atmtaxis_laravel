@@ -3,7 +3,7 @@
 
 @section('page')
 
-@include('book/mapstyle')
+@include('includes/mapstyle')
 
 <!-- Three -->
 <section id="three" class="wrapper">

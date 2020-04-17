@@ -13,7 +13,11 @@ $('document').ready(function(){
         $.ajax({
                type: "POST",
                url: url,
-               data: form.serialize(), // serializes the form's elements.
+               data: form.serialize(), // serializes the form's elements., // serializes the form's elements.
+               error: function(data)
+               {
+                   console.log(data);
+               },
                success: function(data)
                {
                    console.log(data);
