@@ -11,7 +11,7 @@
 
         <header class="align-center">
             <h1 style="font-size: 45px;">Taxi Fare Calculator &amp; Estimator</h1>
-            <p>You can use our fare calculator to get an estimation of peak and off peak time costs when you book a journey with us. For an actual price please use our <a href="quote.php">online booking tool</a>, and we will give you a price tailored to your needs.</p>
+            <p>You can use our fare calculator to get an estimation of peak and off peak time costs when you book a journey with us. For an actual price please use our <a href="{{ route('booking') }}">online booking tool</a>, and we will give you a price tailored to your needs.</p>
         </header>
         <div class="align-center" style="margin: 20px;">
             <h2>1. Where would you like to be picked up from?</h2>

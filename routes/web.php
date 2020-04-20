@@ -74,6 +74,10 @@ Route::group([
 Route::get('/farecalculator', 'FareCalculatorController@index')->name('fareCalculator.index');
 Route::post('/farecalculator', 'FareCalculatorController@calculate')->name('fareCalculator.calculate');
 
+Route::get('/services', 'ServicesController@index')->name('services');
+
+Route::get('/about', 'AboutController@index')->name('about');
+
 Auth::routes();
 
 //Route::get('/home', 'HomeController@index')->name('account');

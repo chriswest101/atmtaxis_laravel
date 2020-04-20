@@ -12,6 +12,6 @@
     </div>
     
     <div style="margin-top:25px;">
-        <a href="farecalculator.php" class="button special">Fare Calculator</a>
+        <a href="{{ route('fareCalculator.index') }}" class="button special">Fare Calculator</a>
     </div>
 </div>

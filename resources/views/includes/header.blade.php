@@ -7,8 +7,8 @@
                 <a href="{{ route('booking') }}">Book</a>
                 <a href="{{ route('quote') }}" class="getQuote">Free Quote</a>
                 <a href="{{ route('fareCalculator.index') }}">Fare Calculator</a>
-                <a href="services.php">Services</a>
-                <a href="about.php">About</a>
+                <a href="{{ route('services') }}">Services</a>
+                <a href="{{ route('about') }}">About</a>
                 <a href="blog.php">Blog</a>
                 <a href="contactus.php"> Contact Us</a> <!-- class="icon fa-envelope-o" -->
                 <a href="https://www.facebook.com/atmtaxis/" target="_blank" class="icon fa-facebook"> Facebook</a>
